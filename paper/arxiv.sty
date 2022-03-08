@@ -13,7 +13,7 @@
     textheight=9in,
     textwidth=6.5in,
     top=1in,
-    headheight=14pt,
+    headheight=15pt,
     headsep=25pt,
     footskip=30pt
   }
@@ -41,14 +41,14 @@
 
 
 %Handling Keywords
-\def\keywordname{{\bfseries \emph{Keywords}}}%
+\def\keywordname{{\bfseries \emph{\keywordsname}}}%
 \def\keywords#1{\par\addvspace\medskipamount{\rightskip=0pt plus1cm
 \def\and{\ifhmode\unskip\nobreak\fi\ $\cdot$
 }\noindent\keywordname\enspace\ignorespaces#1\par}}
 
 % font sizes with reduced leading
 \renewcommand{\normalsize}{%
-  \@setfontsize\normalsize\@xpt\@xipt
+  \@setfontsize\normalsize\@xipt\@xiipt
   \abovedisplayskip      7\p@ \@plus 2\p@ \@minus 5\p@
   \abovedisplayshortskip \z@ \@plus 3\p@
   \belowdisplayskip      \abovedisplayskip
@@ -252,7 +252,7 @@
 \renewenvironment{abstract}
 {
   \centerline
-  {\large \bfseries \scshape Abstract}
+  {\large \bfseries \scshape \abstractname}
   \begin{quote}
 }
 {
