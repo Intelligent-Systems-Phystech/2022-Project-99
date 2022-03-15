@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[a4paper, 12pt]{article}
 \usepackage{arxiv}
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -16,6 +16,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{mathtools}
+\usepackage{extsizes} % Возможность сделать 14-й шрифт
 
 % \renewcommand{\shorttitle}{\textit{arXiv} Template}
 \renewcommand{\headeright}{}
@@ -95,11 +96,18 @@
 
 Также можно отметить, что метод LIME является не самым эффективным методом с точки зрения времени.
 
-\includegraphics[width=\textwidth]{../figures/lime_time}
+\includegraphics[scale=0.5]{../figures/lime_time}
 
 Как видно из графика, на данной модели метод LIME способен обработать около 20 слов в секунду.
 
 Вышеперечисленных недостатков мы постараемся избежать в новом подходе.
+
+Для оценки качества интерпретации требуется построить следующие графики:
+\begin{itemize}
+\item Распределение предсказаний интерпретируемой модели
+
+\item Косинусное расстояние между предсказаниями исходной модели и построенной интерпретируемой модели
+\end{itemize}
 
 \bibliographystyle{unsrt}
 \bibliography{Gaponov2022InterpretableRNN}
