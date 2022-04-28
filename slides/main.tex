@@ -13,6 +13,7 @@
 \usepackage{multicol}% many columns in slide
 \usepackage{hyperref}% urls
 \usepackage{hhline}%tables
+\usepackage{svg}
 % Your figures are here:
 \graphicspath{ {../figures/} }
 
@@ -73,23 +74,20 @@ neural networks for sequence learning, 2015.
 
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Обозначения}
-% \begin{block}{qwe1}
-% \end{block}
-$L~-$ число слоёв нейронной сети
 
-$\mathbf{x}_0~-$ исходный объект
+Для слоя с номером $i$
 
-$\mathbf{a}_i~-$ вход слоя с номером $i$
+$\mathbf{a}_i~-$ вход слоя
 
-$f_i~-$ функция активации после слоя с номером $i$
+$\mathbf{h}_i~-$ скрытое состояние
 
-$\mathbf{W}_i~-$ матрица линейного преобразования слоя с номером $i$
+$f_i~-$ функция активации
+
+$\mathbf{W}_i~-$ матрица линейного преобразования
 
 $\mathbf{b}_i~-$ вектор сдвига
 
-$$a_i=f_i\left(\mathbf{W}_i \mathbf{a}_{i} + \mathbf{b}_i\right)$$
-
-$$\mathbf{a}_1=\mathbf{x}_0$$
+$$[\mathbf{a}_{i+1}, \mathbf{h}_{i+1}]=f_i\left(\mathbf{W}_i [\mathbf{a}_{i},\mathbf{h}_i] + \mathbf{b}_i\right)$$
 
 Рассматриваются кусочно-линейные функции активации, то есть
 
@@ -104,7 +102,7 @@ $$\mathbf{a}_1=\mathbf{x}_0$$
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Описание метода}
-Исходная модель представляется в виде математически эквивалентного множества линейных классификаторов $F_1,\dots,F_h$, заданных на выпуклых многогранниках $P_1,\dots,P_h\subset \mathcal{X}$, где $\mathcal{X}~-$ пространство признаков.
+Исходная модель представляется в виде математически эквивалентного множества линейных классификаторов $F_1,\dots,F_h$, заданных на выпуклых многогранниках $P_1,\dots,P_h\subset \mathbf{X}$, где $\mathbf{X}~-$ пространство признаков.
 \bigskip
 
 Линейный классификатор с небольшим числом ненулевых коэффициентов считается интерпретируемой моделью.
@@ -113,31 +111,35 @@ $$\mathbf{a}_1=\mathbf{x}_0$$
 Свойство точности интерпретаций выполнено автоматически, так как построенная модель математически эквивалентна исходной.
 \bigskip
 
-Также интерпретации будут согласованными, так как близкие объекты в пространстве $\mathcal{X}$ будут принадлежать одному выпуклому многограннику $P_i$, а значит, будут классифицироваться одним и тем же линейным классификатором $F_i$.
+Также интерпретации будут согласованными, так как близкие объекты в пространстве $\mathbf{X}$ будут принадлежать одному выпуклому многограннику $P_i$, а значит, будут классифицироваться одним и тем же линейным классификатором $F_i$.
 
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Вычислительный эксперимент}
 
-Зафиксируем подвыборку размера 1000. Для каждого объекта найдём ближайший в смысле коэффициента Жаккара.
+Зафиксируем выборку размера 1000. Для каждого объекта сгенерируем похожий объект, заменяя некоторые слова на синонимы.
 \bigskip
 
 Построим интерпретацию каждого объекта по отдельности. Далее будем оценивать предсказания исходной модели либо на текущем объекте (для метода LIME), либо на соседнем объекте (для обобщения метода OpenBox).
 \bigskip
 
-Построим график истинных предсказаний модели и оценок предсказаний, полученных данными методами. Также построим графики косинусного расстояния между истинными предсказаниями и их оценками. Помимо этого, измерим точность предсказаний метрикой RMSE (Root mean squared error).
+Построим график истинных предсказаний модели и оценок предсказаний, полученных данными методами. Также построим графики косинусного расстояния между истинными предсказаниями и их оценками. Помимо этого, измерим точность предсказаний метриками RMSE, MAE, MAPE.
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Вычислительный эксперимент}
 Существующий метод \textbf{LIME} не обладает достаточной точностью.
-
+% \begin{columns}[c]
+% \column{0.5\textwidth}
+% \includegraphics[width=\textwidth]{../figures/lime_proba_est.svg}
+% \column{0.5\textwidth}
+% \includegraphics[width=\textwidth]{../figures/lime_cosine.svg}
+% \end{columns}
 \begin{columns}[c]
 \column{0.5\textwidth}
-\includegraphics[width=\textwidth]{../figures/lime_proba_est.eps}
+\includesvg[width=\textwidth]{../figures/lime_proba_est.svg}
 \column{0.5\textwidth}
-\includegraphics[width=\textwidth]{../figures/lime_cosine.eps}
+\includesvg[width=\textwidth]{../figures/lime_cosine.svg}
 \end{columns}
-
 Как видно из графиков, оценки предсказаний, полученные методом LIME значительно отклоняются от истинных для большой доли объектов.
 
 \end{frame}
@@ -146,19 +148,32 @@ $$\mathbf{a}_1=\mathbf{x}_0$$
 Построим аналогичные графики для метода OpenBox. Напомним, что в данном случае оценивается предсказание модели не в исходном объекте, а в соседнем.
 \begin{columns}[c]
 \column{0.5\textwidth}
-\includegraphics[width=\textwidth]{../figures/openbox_proba_est.eps}
+\includesvg[width=\textwidth]{../figures/openbox_proba_est.svg}
 \column{0.5\textwidth}
-\includegraphics[width=\textwidth]{../figures/openbox_cosine.eps}
+\includesvg[width=\textwidth]{../figures/openbox_cosine.svg}
 \end{columns}
 \begin{columns}[c]
-\column{0.5\textwidth}
+\column{0.33\textwidth}
 \begin{block}{RMSE}
 \begin{itemize}
-    \item OpenBox: 0.083
-    \item LIME: 0.118
+    \item OpenBox: 0.015
+    \item LIME: 0.040
 \end{itemize}
 \end{block}
-\column{0.5\textwidth}
+\column{0.33\textwidth}
+\begin{block}{MAE}
+\begin{itemize}
+    \item OpenBox: 0.008
+    \item LIME: 0.014
+\end{itemize}
+\end{block}
+\column{0.33\textwidth}
+\begin{block}{MAPE}
+\begin{itemize}
+    \item OpenBox: 0.019
+    \item LIME: 0.039
+\end{itemize}
+\end{block}
 \end{columns}
 
 \end{frame}
